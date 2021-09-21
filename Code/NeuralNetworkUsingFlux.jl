@@ -16,9 +16,17 @@ function mainFlux()
     sampleSize = 100
     rawInputs = [[(xRange.max - xRange.min) * rand() + xRange.min] for ii in 1:sampleSize] # Draw inputs from uniform distribtuion
     rawOutputs = [[f(rawInputs[ii]...)] for ii in 1:sampleSize] # Compute outputs for each input
-    trainingData = zip(rawInputs, rawOutputs)
-    #trainingData = Flux.Data.DataLoader((vcat(rawInputs...), vcat(rawOutputs...)), batchsize=1) # Alternatively you can use the dataloader
+    trainingData = zip(rawInputs, rawOutputs) # Initialize training dataset for stochastic gradient descent (creates an iterator of tuples with inputs and outputs)
+    #trainingData = Flux.Data.DataLoader((hcat(rawInputs...), hcat(rawOutputs...)), batchsize=1) # Alternatively you can use the dataloader, 
+                                                                                                 # which allows you to specifify the batchsize for
+                                                                                                 # minibatch (or batch) gradient descent
     # Note: we are not normalizing the inputs/outputs in this example
+    
+    # Note: To inspect the batches in trainingData you can loop over them as follows
+    # for (x, y) in trainingData
+    #     display(x) # Displays all inputs that are used to compute gradient for one step in the gradient descent
+    #     # display(y) # This displays the corresponding outputs
+    # end
 
     # Define the neural network layers (this defines a function called model(x))
     model = Chain(
